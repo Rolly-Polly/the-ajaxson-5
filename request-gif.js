@@ -34,38 +34,29 @@ function fetchAndDisplayGif(event) {
     
     console.log(params)
 
-    // make an ajax request for a random GIF
-    $.ajax({
-        url: "https://api.giphy.com/v1/gifs/random", // TODO where should this request be sent?
-        data: params, // attach those extra parameters onto the request
-        success: function(response) {
-            console.log(response)
-            var gif_url = response.data.image_url;
-            console.log(gif_url);                 
+    var captcha = document.getElementById("captcha").value;
+    if (captcha == "5") {
+        document.getElementById("error").innerHTML = "";
+        // make an ajax request for a random GIF
+        $.ajax({
+            url: "https://api.giphy.com/v1/gifs/random", // TODO where should this request be sent?
+            data: params, // attach those extra parameters onto the request
+            success: function(response) {
+                console.log(response)
+                var gif_url = response.data.image_url;
+                console.log(gif_url);                 
 
-            document.getElementById("gif").src = gif_url;
-                    
-            // if the response comes back successfully, the code in here will execute.
-            
+                document.getElementById("gif").src = gif_url;
+            },
+            error: function() {
+                $("#feedback").text("Sorry, could not load GIF. Try again!");
+                setGifLoadedStatus(false);
+            }
+        });
+    } else {
+        document.getElementById("error").innerHTML = "No gifs for you";
+    }
 
-            // jQuery passes us the `response` variable, a regular javascript object created from the JSON the server gave us
-           // console.log("we received a response!");
-          
-            
-            // TODO
-            // 1. set the source attribute of our image to the image_url of the GIF
-           // <img src="http://media1.giphy.com/media/RBLigAVE0xJte/giphy.gif"/>
-            // 2. hide the feedback message and display the image
-        },
-        error: function() {
-            // if something went wrong, the code in here will execute instead of the success function
-            
-            // give the user an error message
-            $("#feedback").text("Sorry, could not load GIF. Try again!");
-            setGifLoadedStatus(false);
-        }
-    });
-    
     // TODO
     // give the user a "Loading..." message while they wait
     
